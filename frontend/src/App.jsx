@@ -3,6 +3,7 @@ import Login from './pages/Login';
 import Signup from './pages/Signup';
 import FloorView from './pages/FloorView';
 import OrderScreen from './pages/OrderScreen';
+import PaymentScreen from './pages/PaymentScreen';
 import ProtectedRoute from './components/ProtectedRoute';
 
 function App() {
@@ -23,6 +24,14 @@ function App() {
         element={
           <ProtectedRoute>
             <OrderScreen />
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/payment/:orderId"
+        element={
+          <ProtectedRoute>
+            <PaymentScreen />
           </ProtectedRoute>
         }
       />
