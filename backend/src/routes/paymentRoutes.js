@@ -5,5 +5,6 @@ const { createPayment, getPaymentByOrder } = require('../controllers/paymentCont
 
 router.post('/', authMiddleware, createPayment);
 router.get('/order/:orderId', authMiddleware, getPaymentByOrder);
+router.get('/public/order/:orderId', getPaymentByOrder);
 
 module.exports = router;

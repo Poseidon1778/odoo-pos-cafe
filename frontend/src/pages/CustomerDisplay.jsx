@@ -20,8 +20,8 @@ export default function CustomerDisplay() {
   async function fetchData() {
     try {
       const [orderRes, paymentRes] = await Promise.all([
-        api.get(`/orders/${orderId}`),
-        api.get(`/payments/order/${orderId}`),
+        api.get(`/orders/public/${orderId}`),
+        api.get(`/payments/public/order/${orderId}`),
       ]);
       setOrder(orderRes.data);
       setPaymentInfo(paymentRes.data);

@@ -106,11 +106,25 @@ async function deleteProduct(req, res) {
     res.status(500).json({ message: 'Error deleting product' });
   }
 }
-
+// PUBLIC: Get products for self-ordering (no auth)
+async function getPublicProducts(req, res) {
+  try {
+    const result = await pool.query(`
+      SELECT id, name, price, unit, description
+      FROM products
+      ORDER BY id
+    `);
+    res.json(result.rows);
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ message: 'Error fetching products' });
+  }
+}
 module.exports = {
   getProducts,
   getProductById,
   createProduct,
   updateProduct,
   deleteProduct,
+  getPublicProducts,
 };

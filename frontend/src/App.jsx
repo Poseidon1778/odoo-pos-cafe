@@ -9,6 +9,7 @@ import CustomerDisplay from './pages/CustomerDisplay';
 import AdminPanel from './pages/AdminPanel';
 import ProtectedRoute from './components/ProtectedRoute';
 import Dashboard from './pages/Dashboard';
+import SelfOrder from './pages/SelfOrder';
 
 function App() {
   return (
@@ -65,6 +66,7 @@ function App() {
       />
       <Route path="/customer/:orderId" element={<CustomerDisplay />} />
       <Route path="/" element={<Login />} />
+      <Route path="/self-order/:token" element={<SelfOrder />} />
     </Routes>
   );
 }

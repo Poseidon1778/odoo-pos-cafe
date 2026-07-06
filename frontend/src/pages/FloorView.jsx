@@ -28,6 +28,22 @@ export default function FloorView() {
   function handleTableClick(table) {
     navigate(`/order/${table.id}`);
   }
+  async function handleGenerateToken(table) {
+    try {
+      const sessionRes = await api.get('/sessions/current');
+      const session = sessionRes.data;
+
+      const res = await api.post('/tokens', {
+        table_id: table.id,
+        session_id: session.id,
+      });
+
+      const link = `${window.location.origin}/self-order/${res.data.token}`;
+      window.prompt('Share this self-order link with the customer:', link);
+    } catch (err) {
+      alert(err.response?.data?.message || 'Failed to generate token. Make sure a session is open.');
+    }
+  }
 
   function handleLogout() {
     logout();
@@ -65,25 +81,33 @@ export default function FloorView() {
           <div style={{ display: 'flex', gap: 15, flexWrap: 'wrap' }}>
             {floor.tables.length === 0 && <p>No tables on this floor yet.</p>}
             {floor.tables.map((table) => (
-              <button
-                key={table.id}
-                onClick={() => handleTableClick(table)}
-                disabled={!table.is_active}
-                style={{
-                  width: 100,
-                  height: 100,
-                  borderRadius: 10,
-                  border: '2px solid #333',
-                  backgroundColor: table.is_active ? '#4CAF50' : '#ccc',
-                  color: 'white',
-                  fontSize: 16,
-                  cursor: table.is_active ? 'pointer' : 'not-allowed',
-                }}
-              >
-                Table {table.table_number}
+              <div key={table.id} style={{ textAlign: 'center' }}>
+                <button
+                  onClick={() => handleTableClick(table)}
+                  disabled={!table.is_active}
+                  style={{
+                    width: 100,
+                    height: 100,
+                    borderRadius: 10,
+                    border: '2px solid #333',
+                    backgroundColor: table.is_active ? '#4CAF50' : '#ccc',
+                    color: 'white',
+                    fontSize: 16,
+                    cursor: table.is_active ? 'pointer' : 'not-allowed',
+                  }}
+                >
+                  Table {table.table_number}
+                  <br />
+                  <small>{table.seats} seats</small>
+                </button>
                 <br />
-                <small>{table.seats} seats</small>
-              </button>
+                <button
+                  onClick={() => handleGenerateToken(table)}
+                  style={{ marginTop: 6, fontSize: 11, padding: '4px 8px' }}
+                >
+                  Self-Order Link
+                </button>
+              </div>
             ))}
           </div>
         </div>

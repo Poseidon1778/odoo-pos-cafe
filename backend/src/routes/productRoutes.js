@@ -7,8 +7,10 @@ const {
   createProduct,
   updateProduct,
   deleteProduct,
+  getPublicProducts,
 } = require('../controllers/productController');
 
+router.get('/public', getPublicProducts);
 router.get('/', authMiddleware, getProducts);
 router.get('/:id', authMiddleware, getProductById);
 router.post('/', authMiddleware, adminOnly, createProduct);

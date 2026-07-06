@@ -8,8 +8,12 @@ const {
   getKitchenOrders,
   updateItemKitchenStatus,
   updateOrderStatus,
+  createSelfOrder,
+  getPublicOrderById,
 } = require('../controllers/orderController');
 
+router.post('/self', createSelfOrder);
+router.get('/public/:id', getPublicOrderById);
 router.post('/', authMiddleware, createOrder);
 router.get('/', authMiddleware, getOrders);
 router.get('/kitchen', authMiddleware, getKitchenOrders);

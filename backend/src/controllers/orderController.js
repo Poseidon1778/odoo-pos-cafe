@@ -159,7 +159,53 @@ async function updateOrderStatus(req, res) {
     res.status(500).json({ message: 'Error updating order status' });
   }
 }
+// PUBLIC: Create order via self-ordering token flow (no auth)
+async function createSelfOrder(req, res) {
+  const { table_id, session_id, items } = req.body;
 
+  if (!session_id || !Array.isArray(items) || items.length === 0) {
+    return res.status(400).json({ message: 'session_id and items are required' });
+  }
+
+  const client = await pool.connect();
+  try {
+    await client.query('BEGIN');
+
+    const total_amount = items.reduce((sum, item) => sum + item.price * item.quantity, 0);
+    const order_number = generateOrderNumber();
+
+    const orderResult = await client.query(
+      `INSERT INTO orders (table_id, session_id, order_number, order_type, total_amount, status)
+       VALUES ($1, $2, $3, 'self', $4, 'pending') RETURNING *`,
+      [table_id || null, session_id, order_number, total_amount]
+    );
+
+    const order = orderResult.rows[0];
+    const insertedItems = [];
+
+    for (const item of items) {
+      const itemResult = await client.query(
+        `INSERT INTO order_items (order_id, product_id, variant_id, quantity, price, kitchen_status)
+         VALUES ($1, $2, $3, $4, $5, 'to_cook') RETURNING *`,
+        [order.id, item.product_id, item.variant_id || null, item.quantity, item.price]
+      );
+      insertedItems.push(itemResult.rows[0]);
+    }
+
+    await client.query('COMMIT');
+    res.status(201).json({ ...order, items: insertedItems });
+  } catch (err) {
+    await client.query('ROLLBACK');
+    console.error(err);
+    res.status(500).json({ message: 'Error creating self order' });
+  } finally {
+    client.release();
+  }
+}
+// PUBLIC: Get order by id (for customer display, no auth)
+async function getPublicOrderById(req, res) {
+  return getOrderById(req, res);
+}
 module.exports = {
   createOrder,
   getOrders,
@@ -167,4 +213,6 @@ module.exports = {
   getKitchenOrders,
   updateItemKitchenStatus,
   updateOrderStatus,
+  createSelfOrder,
+  getPublicOrderById,
 };
