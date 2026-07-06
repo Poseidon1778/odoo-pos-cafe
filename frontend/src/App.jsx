@@ -8,6 +8,7 @@ import KitchenDisplay from './pages/KitchenDisplay';
 import CustomerDisplay from './pages/CustomerDisplay';
 import AdminPanel from './pages/AdminPanel';
 import ProtectedRoute from './components/ProtectedRoute';
+import Dashboard from './pages/Dashboard';
 
 function App() {
   return (
@@ -51,6 +52,14 @@ function App() {
         element={
           <ProtectedRoute>
             <AdminPanel />
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/dashboard"
+        element={
+          <ProtectedRoute>
+            <Dashboard />
           </ProtectedRoute>
         }
       />
