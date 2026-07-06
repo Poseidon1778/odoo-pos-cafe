@@ -43,6 +43,9 @@ export default function FloorView() {
         <div>
           <span style={{ marginRight: 15 }}>Logged in as: {user?.name} ({user?.role})</span>
           <button onClick={() => navigate('/kitchen')} style={{ marginRight: 10 }}>Kitchen Display</button>
+          {user?.role === 'admin' && (
+            <button onClick={() => navigate('/admin')} style={{ marginRight: 10 }}>Backend Config</button>
+          )}
           <button onClick={handleLogout}>Logout</button>
         </div>
       </div>

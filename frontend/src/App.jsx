@@ -6,6 +6,7 @@ import OrderScreen from './pages/OrderScreen';
 import PaymentScreen from './pages/PaymentScreen';
 import KitchenDisplay from './pages/KitchenDisplay';
 import CustomerDisplay from './pages/CustomerDisplay';
+import AdminPanel from './pages/AdminPanel';
 import ProtectedRoute from './components/ProtectedRoute';
 
 function App() {
@@ -42,6 +43,14 @@ function App() {
         element={
           <ProtectedRoute>
             <KitchenDisplay />
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/admin"
+        element={
+          <ProtectedRoute>
+            <AdminPanel />
           </ProtectedRoute>
         }
       />
