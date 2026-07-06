@@ -5,6 +5,7 @@ import FloorView from './pages/FloorView';
 import OrderScreen from './pages/OrderScreen';
 import PaymentScreen from './pages/PaymentScreen';
 import KitchenDisplay from './pages/KitchenDisplay';
+import CustomerDisplay from './pages/CustomerDisplay';
 import ProtectedRoute from './components/ProtectedRoute';
 
 function App() {
@@ -44,6 +45,7 @@ function App() {
           </ProtectedRoute>
         }
       />
+      <Route path="/customer/:orderId" element={<CustomerDisplay />} />
       <Route path="/" element={<Login />} />
     </Routes>
   );

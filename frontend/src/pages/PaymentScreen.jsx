@@ -109,6 +109,11 @@ export default function PaymentScreen() {
     <div style={{ maxWidth: 500, margin: '60px auto', textAlign: 'center' }}>
       <h2>Payment</h2>
       <h3>Total: ₹{order.total_amount}</h3>
+	<p>
+         <a href={`/customer/${orderId}`} target="_blank" rel="noreferrer">
+          Open Customer Display →
+        </a>
+      </p>
 
       {error && <p style={{ color: 'red' }}>{error}</p>}
 
