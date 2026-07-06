@@ -4,6 +4,7 @@ import Signup from './pages/Signup';
 import FloorView from './pages/FloorView';
 import OrderScreen from './pages/OrderScreen';
 import PaymentScreen from './pages/PaymentScreen';
+import KitchenDisplay from './pages/KitchenDisplay';
 import ProtectedRoute from './components/ProtectedRoute';
 
 function App() {
@@ -32,6 +33,14 @@ function App() {
         element={
           <ProtectedRoute>
             <PaymentScreen />
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/kitchen"
+        element={
+          <ProtectedRoute>
+            <KitchenDisplay />
           </ProtectedRoute>
         }
       />
