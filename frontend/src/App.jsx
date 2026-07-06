@@ -1,11 +1,8 @@
 import { Routes, Route } from 'react-router-dom';
 import Login from './pages/Login';
 import Signup from './pages/Signup';
+import FloorView from './pages/FloorView';
 import ProtectedRoute from './components/ProtectedRoute';
-
-function FloorPlaceholder() {
-  return <h2 style={{ textAlign: 'center', marginTop: 80 }}>Floor View — coming next</h2>;
-}
 
 function App() {
   return (
@@ -16,7 +13,7 @@ function App() {
         path="/floor"
         element={
           <ProtectedRoute>
-            <FloorPlaceholder />
+            <FloorView />
           </ProtectedRoute>
         }
       />
