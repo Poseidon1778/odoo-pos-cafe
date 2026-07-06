@@ -2,6 +2,7 @@ import { Routes, Route } from 'react-router-dom';
 import Login from './pages/Login';
 import Signup from './pages/Signup';
 import FloorView from './pages/FloorView';
+import OrderScreen from './pages/OrderScreen';
 import ProtectedRoute from './components/ProtectedRoute';
 
 function App() {
@@ -14,6 +15,14 @@ function App() {
         element={
           <ProtectedRoute>
             <FloorView />
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/order/:tableId"
+        element={
+          <ProtectedRoute>
+            <OrderScreen />
           </ProtectedRoute>
         }
       />
