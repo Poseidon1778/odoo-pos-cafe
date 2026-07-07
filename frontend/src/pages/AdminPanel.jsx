@@ -36,6 +36,7 @@ export default function AdminPanel() {
               borderRadius: 6,
               border: activeTab === tab ? '2px solid #4CAF50' : '1px solid #ccc',
               backgroundColor: activeTab === tab ? '#e6f4ea' : '#fff',
+              color: '#111',
               cursor: 'pointer',
               textTransform: 'capitalize',
             }}

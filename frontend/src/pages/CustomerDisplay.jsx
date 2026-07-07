@@ -40,7 +40,7 @@ export default function CustomerDisplay() {
 
   return (
     <div style={{ maxWidth: 500, margin: '60px auto', textAlign: 'center', fontFamily: 'sans-serif' }}>
-      <h1>Thank you for your order!</h1>
+      <h1 style={{ fontSize: 28, lineHeight: 1.3, marginBottom: 10 }}>Thank you for your order!</h1>
       <h3>Order #{order.order_number}</h3>
 
       <div style={{ margin: '30px 0', textAlign: 'left', border: '1px solid #ddd', borderRadius: 8, padding: 20 }}>
