@@ -6,8 +6,10 @@ const {
   createPaymentMethod,
   updatePaymentMethod,
   deletePaymentMethod,
+  getPublicPaymentMethods,
 } = require('../controllers/paymentMethodController');
 
+router.get('/public', getPublicPaymentMethods);
 router.get('/', authMiddleware, getPaymentMethods);
 router.post('/', authMiddleware, adminOnly, createPaymentMethod);
 router.put('/:id', authMiddleware, adminOnly, updatePaymentMethod);

@@ -10,6 +10,16 @@ async function getPaymentMethods(req, res) {
   }
 }
 
+async function getPublicPaymentMethods(req, res) {
+  try {
+    const result = await pool.query('SELECT * FROM payment_methods WHERE is_enabled = true ORDER BY id');
+    res.json(result.rows);
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ message: 'Error fetching payment methods' });
+  }
+}
+
 async function createPaymentMethod(req, res) {
   const { type, is_enabled, upi_id } = req.body;
 
@@ -64,4 +74,5 @@ module.exports = {
   createPaymentMethod,
   updatePaymentMethod,
   deletePaymentMethod,
+  getPublicPaymentMethods,
 };

@@ -70,6 +70,15 @@ export default function CustomerDisplay() {
         {isPaid ? '✔ Payment Successful' : '⏳ Awaiting Payment'}
       </div>
 
+      {!isPaid && (
+        <button
+          onClick={() => navigate(`/pay/${orderId}`)}
+          style={{ marginTop: 20, padding: '12px 24px', backgroundColor: '#4CAF50', color: 'white', border: 'none', borderRadius: 6, fontSize: 16 }}
+        >
+          Pay Now
+        </button>
+      )}
+
       {paymentInfo?.payment && (
         <p style={{ marginTop: 15, color: '#555' }}>
           Paid via {paymentInfo.payment.payment_type?.toUpperCase()}

@@ -1,0 +1,146 @@
+import { useState, useEffect } from 'react';
+import { useParams, useNavigate } from 'react-router-dom';
+import axios from 'axios';
+
+const API_BASE = 'http://localhost:5000/api';
+
+export default function SelfPayment() {
+  const { orderId } = useParams();
+  const navigate = useNavigate();
+
+  const [order, setOrder] = useState(null);
+  const [paymentMethods, setPaymentMethods] = useState([]);
+  const [selectedMethod, setSelectedMethod] = useState(null);
+  const [showQr, setShowQr] = useState(false);
+  const [error, setError] = useState('');
+  const [loading, setLoading] = useState(true);
+  const [confirming, setConfirming] = useState(false);
+  const [done, setDone] = useState(false);
+
+  useEffect(() => {
+    fetchData();
+  }, []);
+
+  async function fetchData() {
+    try {
+      const [orderRes, methodsRes] = await Promise.all([
+        axios.get(`${API_BASE}/orders/public/${orderId}`),
+        axios.get(`${API_BASE}/payment-methods/public`),
+      ]);
+      setOrder(orderRes.data);
+      setPaymentMethods(methodsRes.data);
+    } catch (err) {
+      setError('Failed to load order/payment info');
+    } finally {
+      setLoading(false);
+    }
+  }
+
+  function handleSelectMethod(method) {
+    setSelectedMethod(method);
+    setShowQr(method.type === 'upi');
+  }
+
+  async function handleConfirmPayment() {
+    if (!selectedMethod) {
+      setError('Select a payment method first');
+      return;
+    }
+    setConfirming(true);
+    try {
+      await axios.post(`${API_BASE}/payments/public`, {
+        order_id: orderId,
+        payment_method_id: selectedMethod.id,
+        amount: order.total_amount,
+      });
+      setDone(true);
+    } catch (err) {
+      setError(err.response?.data?.message || 'Payment failed');
+    } finally {
+      setConfirming(false);
+    }
+  }
+
+  if (loading) return <p style={{ textAlign: 'center', marginTop: 60 }}>Loading...</p>;
+  if (!order) return <p style={{ textAlign: 'center', marginTop: 60 }}>Order not found</p>;
+
+  if (done) {
+    return (
+      <div style={{ textAlign: 'center', marginTop: 60 }}>
+        <h2>Payment Successful!</h2>
+        <p>Thank you for your payment.</p>
+        <button onClick={() => navigate(`/customer/${orderId}`)}>
+          Back to Order Status
+        </button>
+      </div>
+    );
+  }
+
+  if (showQr && selectedMethod?.type === 'upi') {
+    const upiString = `upi://pay?pa=${selectedMethod.upi_id}&am=${order.total_amount}&cu=INR`;
+    const qrImageUrl = `https://api.qrserver.com/v1/create-qr-code/?size=250x250&data=${encodeURIComponent(upiString)}`;
+
+    return (
+      <div style={{ textAlign: 'center', marginTop: 60 }}>
+        <h2>UPI QR Payment</h2>
+        <p>Amount: Rs.{order.total_amount}</p>
+        <img src={qrImageUrl} alt="UPI QR Code" style={{ margin: '20px 0' }} />
+        <p>UPI ID: {selectedMethod.upi_id}</p>
+        {error && <p style={{ color: 'red' }}>{error}</p>}
+        <div>
+          <button
+            onClick={handleConfirmPayment}
+            disabled={confirming}
+            style={{ padding: '10px 20px', marginRight: 10, backgroundColor: '#4CAF50', color: 'white', border: 'none', borderRadius: 6 }}
+          >
+            {confirming ? 'Confirming...' : 'Confirmed'}
+          </button>
+          <button
+            onClick={() => { setShowQr(false); setSelectedMethod(null); }}
+            style={{ padding: '10px 20px', backgroundColor: '#ccc', color: '#111', border: 'none', borderRadius: 6 }}
+          >
+            Cancel
+          </button>
+        </div>
+      </div>
+    );
+  }
+
+  return (
+    <div style={{ maxWidth: 500, margin: '60px auto', textAlign: 'center' }}>
+      <h2>Pay Your Bill</h2>
+      <h3>Total: Rs.{order.total_amount}</h3>
+      {error && <p style={{ color: 'red' }}>{error}</p>}
+
+      <div style={{ display: 'flex', flexDirection: 'column', gap: 10, marginTop: 20 }}>
+        {paymentMethods.map((method) => (
+          <button
+            key={method.id}
+            onClick={() => handleSelectMethod(method)}
+            style={{
+              padding: 15,
+              borderRadius: 8,
+              border: selectedMethod?.id === method.id ? '2px solid #4CAF50' : '1px solid #ccc',
+              backgroundColor: '#fff',
+              color: '#111',
+              cursor: 'pointer',
+              textTransform: 'uppercase',
+            }}
+          >
+            {method.type}
+          </button>
+        ))}
+      </div>
+
+      {selectedMethod && selectedMethod.type !== 'upi' && (
+        <button
+          onClick={handleConfirmPayment}
+          disabled={confirming}
+          style={{ width: '100%', padding: 12, marginTop: 20, backgroundColor: '#4CAF50', color: 'white', border: 'none', borderRadius: 6 }}
+        >
+          {confirming ? 'Processing...' : 'Validate Payment'}
+        </button>
+      )}
+    </div>
+  );
+}

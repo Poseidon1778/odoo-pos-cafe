@@ -8,7 +8,11 @@ async function createPayment(req, res) {
     return res.status(400).json({ message: 'order_id, payment_method_id, and amount are required' });
   }
 
-  const client = await pool.connect();
+async function createPublicPayment(req, res) {
+  return createPayment(req, res);
+}
+ 
+ const client = await pool.connect();
   try {
     await client.query('BEGIN');
 
@@ -32,6 +36,9 @@ async function createPayment(req, res) {
   } finally {
     client.release();
   }
+}
+async function createPublicPayment(req, res) {
+  return createPayment(req, res);
 }
 
 // Get payment status for an order (for Customer Display)
@@ -60,4 +67,4 @@ async function getPaymentByOrder(req, res) {
   }
 }
 
-module.exports = { createPayment, getPaymentByOrder };
+module.exports = { createPayment, getPaymentByOrder, createPublicPayment };
