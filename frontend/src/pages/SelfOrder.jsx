@@ -25,8 +25,6 @@ export default function SelfOrder() {
       const tokenRes = await axios.get(`${API_BASE}/tokens/${token}`);
       setTokenInfo(tokenRes.data);
 
-      // Products endpoint requires auth normally, but self-order needs public access.
-      // Using a plain axios call here since this page has no logged-in user/JWT.
       const productsRes = await axios.get(`${API_BASE}/products/public`);
       setProducts(productsRes.data);
     } catch (err) {
@@ -94,7 +92,7 @@ export default function SelfOrder() {
       <div style={{ maxWidth: 500, margin: '60px auto', textAlign: 'center' }}>
         <h2>Order Placed!</h2>
         <p>Order #{placedOrder.order_number}</p>
-        <p>Total: ₹{placedOrder.total_amount}</p>
+        <p>Total: Rs.{placedOrder.total_amount}</p>
         <p>Your order has been sent to the kitchen. Please wait for your food to be prepared.</p>
         <button onClick={() => navigate(`/customer/${placedOrder.id}`)}>
           View Order & Payment Status
@@ -113,21 +111,21 @@ export default function SelfOrder() {
           <button
             key={product.id}
             onClick={() => addToCart(product)}
-            style={{ padding: 15, borderRadius: 8, border: '1px solid #ccc', backgroundColor: '#fff', cursor: 'pointer', textAlign: 'left' }}
+            style={{ padding: 15, borderRadius: 8, border: '1px solid #ccc', backgroundColor: '#fff', color: '#111', cursor: 'pointer', textAlign: 'left' }}
           >
             <strong>{product.name}</strong>
             <br />
-            ₹{product.price}
+            Rs.{product.price}
           </button>
         ))}
       </div>
 
-      <div style={{ backgroundColor: '#f7f7f7', padding: 15, borderRadius: 8 }}>
+      <div style={{ backgroundColor: '#f7f7f7', padding: 15, borderRadius: 8, color: '#111' }}>
         <h3>Your Cart</h3>
         {cart.length === 0 && <p>No items yet</p>}
         {cart.map((item) => (
           <div key={item.product_id} style={{ display: 'flex', justifyContent: 'space-between', marginBottom: 8 }}>
-            <span>{item.name} — ₹{item.price}</span>
+            <span>{item.name} — Rs.{item.price}</span>
             <div>
               <button onClick={() => changeQuantity(item.product_id, -1)}>-</button>
               <span style={{ margin: '0 8px' }}>{item.quantity}</span>
@@ -136,7 +134,7 @@ export default function SelfOrder() {
           </div>
         ))}
         <hr />
-        <h3>Total: ₹{getTotal().toFixed(2)}</h3>
+        <h3>Total: Rs.{getTotal().toFixed(2)}</h3>
         <button
           onClick={handlePlaceOrder}
           disabled={placingOrder}

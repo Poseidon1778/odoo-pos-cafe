@@ -71,7 +71,6 @@ export default function PaymentScreen() {
   if (loading) return <p style={{ textAlign: 'center', marginTop: 60 }}>Loading...</p>;
   if (!order) return <p style={{ textAlign: 'center', marginTop: 60 }}>Order not found</p>;
 
-  // UPI QR screen (special flow)
   if (showQr && selectedMethod?.type === 'upi') {
     const upiString = `upi://pay?pa=${selectedMethod.upi_id}&am=${order.total_amount}&cu=INR`;
     const qrImageUrl = `https://api.qrserver.com/v1/create-qr-code/?size=250x250&data=${encodeURIComponent(upiString)}`;
@@ -79,7 +78,7 @@ export default function PaymentScreen() {
     return (
       <div style={{ textAlign: 'center', marginTop: 60 }}>
         <h2>UPI QR Payment</h2>
-        <p>Amount: ₹{order.total_amount}</p>
+        <p>Amount: Rs.{order.total_amount}</p>
         <img src={qrImageUrl} alt="UPI QR Code" style={{ margin: '20px 0' }} />
         <p>UPI ID: {selectedMethod.upi_id}</p>
 
@@ -95,7 +94,7 @@ export default function PaymentScreen() {
           </button>
           <button
             onClick={handleCancelQr}
-            style={{ padding: '10px 20px', backgroundColor: '#ccc', border: 'none', borderRadius: 6 }}
+            style={{ padding: '10px 20px', backgroundColor: '#ccc', color: '#111', border: 'none', borderRadius: 6 }}
           >
             Cancel
           </button>
@@ -104,13 +103,13 @@ export default function PaymentScreen() {
     );
   }
 
-  // Main payment method selection screen
   return (
     <div style={{ maxWidth: 500, margin: '60px auto', textAlign: 'center' }}>
       <h2>Payment</h2>
-      <h3>Total: ₹{order.total_amount}</h3>
-	<p>
-         <a href={`/customer/${orderId}`} target="_blank" rel="noreferrer">
+      <h3>Total: Rs.{order.total_amount}</h3>
+
+      <p>
+        <a href={`/customer/${orderId}`} target="_blank" rel="noreferrer">
           Open Customer Display →
         </a>
       </p>
@@ -127,6 +126,7 @@ export default function PaymentScreen() {
               borderRadius: 8,
               border: selectedMethod?.id === method.id ? '2px solid #4CAF50' : '1px solid #ccc',
               backgroundColor: '#fff',
+              color: '#111',
               cursor: 'pointer',
               textTransform: 'uppercase',
             }}

@@ -107,7 +107,6 @@ export default function OrderScreen() {
 
   return (
     <div style={{ display: 'flex', height: '100vh' }}>
-      {/* Product list */}
       <div style={{ flex: 2, padding: 20, overflowY: 'auto' }}>
         <button onClick={() => navigate('/floor')}>← Back to Floor</button>
         <h2>Table {tableId} — Order</h2>
@@ -124,20 +123,20 @@ export default function OrderScreen() {
                 borderRadius: 8,
                 border: '1px solid #ccc',
                 backgroundColor: '#fff',
+                color: '#111',
                 cursor: 'pointer',
                 textAlign: 'left',
               }}
             >
               <strong>{product.name}</strong>
               <br />
-              ₹{product.price}
+              Rs.{product.price}
             </button>
           ))}
         </div>
       </div>
 
-      {/* Cart */}
-      <div style={{ flex: 1, padding: 20, backgroundColor: '#f7f7f7', borderLeft: '1px solid #ddd' }}>
+      <div style={{ flex: 1, padding: 20, backgroundColor: '#f7f7f7', color: '#111', borderLeft: '1px solid #ddd' }}>
         <h3>Cart</h3>
         {cart.length === 0 && <p>No items yet</p>}
 
@@ -149,7 +148,7 @@ export default function OrderScreen() {
             <div>
               <strong>{item.name}</strong>
               <br />
-              ₹{item.price} x {item.quantity}
+              Rs.{item.price} x {item.quantity}
             </div>
             <div>
               <button onClick={() => changeQuantity(item.product_id, -1)}>-</button>
@@ -160,7 +159,7 @@ export default function OrderScreen() {
         ))}
 
         <hr />
-        <h3>Total: ₹{getTotal().toFixed(2)}</h3>
+        <h3>Total: Rs.{getTotal().toFixed(2)}</h3>
 
         <button
           onClick={handleSendOrder}

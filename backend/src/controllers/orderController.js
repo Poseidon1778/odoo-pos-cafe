@@ -109,7 +109,8 @@ async function getKitchenOrders(req, res) {
       JOIN products p ON oi.product_id = p.id
       JOIN categories c ON p.category_id = c.id
       JOIN orders o ON oi.order_id = o.id
-      WHERE c.send_to_kitchen = true AND oi.kitchen_status != 'completed'
+      WHERE c.send_to_kitchen = true
+        AND o.created_at::date = CURRENT_DATE
       ORDER BY o.created_at ASC
     `);
     res.json(result.rows);
